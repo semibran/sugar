@@ -1,1 +1,23 @@
-def greeting = String.reverse('dlrow olleh')
+def TILE_SIZE = 16
+
+def text = 'Hello world!'
+for char in text:
+	Console.print(char)
+
+def tick(ticks):
+	Console.print(ticks)
+	display.render()
+
+game.on('tick', tick)
+
+def add(a, b) = a + b
+
+def sub(a, b) = a - b
+
+def mul(a, b) = a * b
+
+def div(a, b) = a / b
+
+def mod(a, b) = a % b
+
+export { add, sub, mul, div, mod }

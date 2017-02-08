@@ -1,28 +1,37 @@
 const fs = require('fs')
-const parse = require('./parser')
+const split = require('./lexer')
 const chalk = require('chalk')
 
-const colors = {
-	keyword: 'blue',
-	variable: 'yellow',
-	operator: 'cyan',
-	number: 'magenta',
-	string: 'green'
+const styles = {
+	keyword: chalk.magenta,
+	variable: chalk.yellow,
+
+	constant: chalk.red,
+	module: chalk.red,
+
+	number: chalk.red,
+	string: chalk.green,
+
+	operator: chalk.cyan,
+	punctuation: chalk.blue
 }
 
-var code = fs.readFileSync('./modules/Math', 'utf-8')
-var data = parse(code)
+var code = fs.readFileSync('./modules/test', 'utf-8')
+var data = split(code)
+
+// console.log(JSON.stringify(data, null, 2))
 
 for (var line of data) {
-	var text = ''
-	for (var i = line.level; i--;)
-		text += '  '
+	var result = ''
 	for (var token of line.tokens) {
-		var color = colors[token.type] || null
-		if (color)
-			text += chalk[color](token.text)
-		else
-			text += token.text
+		var { text, type } = token
+		if (type === 'operator' || type === 'keyword' && result || text === '}')
+			result += ' '
+		result += styles[type](text)
+		if (type === 'operator' || type === 'keyword' || text === ',' || text === '{')
+			result += ' '
 	}
-	console.log(text)
+	for (var i = line.level; i--;)
+		result = '  ' + result
+	console.log(result)
 }
